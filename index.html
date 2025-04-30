@@ -675,22 +675,21 @@ document.getElementById('coupleHeading').classList.toggle('hidden', noResults);
     });
   </script>
 <script>
-  function postResize() {
-    const height = document.body.scrollHeight;
+  function sendHeightToWix() {
+    const height = document.documentElement.scrollHeight;
     window.parent.postMessage({ type: "resizeFrame", height }, "*");
   }
 
-  window.addEventListener("load", postResize);
+  window.addEventListener("load", sendHeightToWix);
 
-  const observer = new MutationObserver(postResize);
-  observer.observe(document.body, {
+  new MutationObserver(sendHeightToWix).observe(document.body, {
     childList: true,
     subtree: true,
-    attributes: true
+    attributes: true,
   });
 
-  // Optional: also call after search/filter manually
-  document.addEventListener("keyup", postResize);
+  // Run when user types
+  document.addEventListener("input", sendHeightToWix);
 </script>
 </body>
 </html>
