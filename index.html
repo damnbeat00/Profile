@@ -709,6 +709,18 @@ document.getElementById('coupleHeading').classList.toggle('hidden', noResults);
   }
 
   document.getElementById("searchInput").addEventListener("keyup", filterProfiles);
+
+  function sendHeightToWix(fixed = false) {
+  const height = fixed ? 1000 : document.documentElement.scrollHeight;
+  window.parent.postMessage({ type: "resizeFrame", height }, "*");
+}
+
+window.addEventListener("load", () => sendHeightToWix());
+const observer = new MutationObserver(() => sendHeightToWix());
+observer.observe(document.body, { childList: true, subtree: true });
+
 </script>
+
+  
 </body>
 </html>
