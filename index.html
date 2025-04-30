@@ -675,14 +675,42 @@ document.getElementById('coupleHeading').classList.toggle('hidden', noResults);
     });
   </script>
 <script>
-  function sendHeightToWix() {
-    const height = document.documentElement.scrollHeight;
+  function sendHeightToWix(fixed = false) {
+    const height = fixed ? 1000 : document.documentElement.scrollHeight;
     window.parent.postMessage({ type: "resizeFrame", height }, "*");
   }
 
-  window.addEventListener("load", sendHeightToWix);
+  window.addEventListener("load", () => sendHeightToWix());
 
-  new MutationObserver(sendHeightToWix).observe(document.body, {
+  const observer = new MutationObserver(() => sendHeightToWix());
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // Call sendHeightToWix(fixed = true) when no results
+  function filterProfiles() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const profiles = document.querySelectorAll('.profile-box');
+    let visibleCount = 0;
+
+    profiles.forEach(profile => {
+      const name = profile.getAttribute('data-name');
+      if (name.includes(input)) {
+        profile.style.display = "block";
+        visibleCount++;
+      } else {
+        profile.style.display = "none";
+      }
+    });
+
+    const noResults = visibleCount === 0;
+    document.getElementById("noResultText").style.display = noResults ? "block" : "none";
+    document.getElementById("coupleHeading").classList.toggle("hidden", noResults);
+
+    sendHeightToWix(noResults); // ⬅️ Send fixed height when no result
+  }
+
+  document.getElementById("searchInput").addEventListener("keyup", filterProfiles);
+</script>
+bserver(sendHeightToWix).observe(document.body, {
     childList: true,
     subtree: true,
     attributes: true,
