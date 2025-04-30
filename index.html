@@ -675,16 +675,22 @@ document.getElementById('coupleHeading').classList.toggle('hidden', noResults);
     });
   </script>
 <script>
-  function sendHeightToParent() {
+  function postResize() {
     const height = document.body.scrollHeight;
     window.parent.postMessage({ type: "resizeFrame", height }, "*");
   }
 
-  window.addEventListener("load", sendHeightToParent);
-  new MutationObserver(sendHeightToParent).observe(document.body, { childList: true, subtree: true });
+  window.addEventListener("load", postResize);
 
-  // Trigger after filtering
-  window.addEventListener("keyup", sendHeightToParent);
+  const observer = new MutationObserver(postResize);
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true
+  });
+
+  // Optional: also call after search/filter manually
+  document.addEventListener("keyup", postResize);
 </script>
 </body>
 </html>
