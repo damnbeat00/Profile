@@ -3,16 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>Massage Finder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
   <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid/css/uicons-solid.css">
-  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
-
 
   <style>
-    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #wixSafeContainer {
+      font-family: 'Baloo 2', cursive;
+      background: #000 url('https://static.wixstatic.com/media/507040_2e9f6b2fb1c0425e87c55ea529972d9a~mv2.png') no-repeat center center;
+      background-size: cover;
+      background-attachment: fixed;
+      color: #fff;
+      padding: 20px;
+    }
+
+      * { box-sizing: border-box; }
 
     body {
       font-family: 'Baloo 2', cursive;
@@ -389,8 +402,9 @@
   </style>
 </head>
 <body>
+<div id="wixSafeContainer">
 
-  <h1>
+<h1>
   <span class="heading-desktop">Find Gay Masseurs</span>
   <span class="heading-mobile">Find Masseur's</span>
 </h1>
@@ -620,9 +634,9 @@
     </div>
   </div>
 
+</div>
 
-
-  <script>
+<script>
     function filterProfiles() {
       const input = document.getElementById('searchInput').value.toLowerCase();
       const profiles = document.querySelectorAll('.profile-box');
@@ -660,29 +674,17 @@ document.getElementById('coupleHeading').classList.toggle('hidden', noResults);
       });
     });
   </script>
-
- <script>
-  function postResize() {
+<script>
+  function sendHeightToParent() {
     const height = document.body.scrollHeight;
     window.parent.postMessage({ type: "resizeFrame", height }, "*");
   }
 
-  // Resize on load
-  window.addEventListener("load", postResize);
+  window.addEventListener("load", sendHeightToParent);
+  new MutationObserver(sendHeightToParent).observe(document.body, { childList: true, subtree: true });
 
-  // Resize on DOM changes (like search results)
-  const observer = new MutationObserver(postResize);
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  // Resize after every search interaction
-  document.getElementById('searchInput').addEventListener('input', () => {
-    setTimeout(postResize, 200);
-  });
+  // Trigger after filtering
+  window.addEventListener("keyup", sendHeightToParent);
 </script>
-
-
 </body>
 </html>
