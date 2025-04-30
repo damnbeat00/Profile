@@ -675,39 +675,13 @@ document.getElementById('coupleHeading').classList.toggle('hidden', noResults);
     });
   </script>
 <script>
-  function sendHeightToWix(fixed = false) {
-    const height = fixed ? 1000 : document.documentElement.scrollHeight;
-    window.parent.postMessage({ type: "resizeFrame", height }, "*");
-  }
-
-  window.addEventListener("load", () => sendHeightToWix());
-
-  const observer = new MutationObserver(() => sendHeightToWix());
-  observer.observe(document.body, { childList: true, subtree: true });
-
-  // Call sendHeightToWix(fixed = true) when no results
-  function filterProfiles() {
-    const input = document.getElementById('searchInput').value.toLowerCase();
-    const profiles = document.querySelectorAll('.profile-box');
-    let visibleCount = 0;
-
-    profiles.forEach(profile => {
-      const name = profile.getAttribute('data-name');
-      if (name.includes(input)) {
-        profile.style.display = "block";
-        visibleCount++;
-      } else {
-        profile.style.display = "none";
-      }
-    });
-
-    const noResults = visibleCount === 0;
-    document.getElementById("noResultText").style.display = noResults ? "block" : "none";
-    document.getElementById("coupleHeading").classList.toggle("hidden", noResults);
-
-    sendHeightToWix(noResults); // ⬅️ Send fixed height when no result
-  }
+  window.addEventListener("message", function (event) {
+    if (event.origin !== "https://damnbeat00.github.io") return; // Security check
+    const iframe = document.getElementById("massageIframe");
+    iframe.style.height = event.data + "px";
+  }, false);
 </script>
+
 
   
 </body>
