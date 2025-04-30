@@ -661,5 +661,28 @@ document.getElementById('coupleHeading').classList.toggle('hidden', noResults);
     });
   </script>
 
+ <script>
+  function postResize() {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage({ type: "resizeFrame", height }, "*");
+  }
+
+  // Resize on load
+  window.addEventListener("load", postResize);
+
+  // Resize on DOM changes (like search results)
+  const observer = new MutationObserver(postResize);
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  // Resize after every search interaction
+  document.getElementById('searchInput').addEventListener('input', () => {
+    setTimeout(postResize, 200);
+  });
+</script>
+
+
 </body>
 </html>
